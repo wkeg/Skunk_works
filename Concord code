@@ -1,0 +1,35 @@
+docker run -d \
+-p 8001:8001 \
+--name server \
+--link db \
+-v /home/wamckei/server.conf:/opt/concord/conf/server.conf:ro \
+-e CONCORD_CFG_FILE=/opt/concord/conf/server.conf \
+walmartlabs/concord-server
+
+
+
+
+concord-server {
+    db {
+        url="jdbc:postgresql://db:5432/postgres"
+        appPassword = "q1"
+        inventoryPassword = "q1"
+    }
+
+    secretStore {
+        serverPassword = "T3Jhbmdl"
+        secretStoreSalt = "VHJpYW5nbGU="
+        projectSecretSalt = "VHJpcHBsZQ=="
+    }
+
+   # AD/LDAP authentication
+    ldap {
+        url = "ldap://ad.lab.nwa.evtcorp.com:3269"
+        searchBase = "DC=lab,DC=nwa,DC=evtcorp,DC=com"
+        principalSearchFilter = "(&(sAMAccountName={0})(objectCategory=person))"
+        userSearchFilter = "(&(|(sAMAccountName={0}*)(displayName={0}*))(objectCategory=person))"
+        usernameProperty = "sAMAccountName"
+        systemUsername = "svc-concord@lab.nwa.evtcorp.com"
+        systemPassword = "C3yDK9EQs6jtgk"
+    }
+}
