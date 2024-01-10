@@ -1,3 +1,4 @@
+#Start Concord server
 docker run -d \
 -p 8001:8001 \
 --name server \
@@ -7,29 +8,12 @@ docker run -d \
 walmartlabs/concord-server
 
 
+#Concord Agent install 
+docker run -d \
+--name agent \
+--link server \
+-e SERVER_API_BASE_URL=http://server:8001 \
+-e SERVER_WEBSOCKET_URL=ws://server:8001/websocket \
+walmartlabs/concord-agent
 
 
-concord-server {
-    db {
-        url="jdbc:postgresql://db:5432/postgres"
-        appPassword = "q1"
-        inventoryPassword = "q1"
-    }
-
-    secretStore {
-        serverPassword = "T3Jhbmdl"
-        secretStoreSalt = "VHJpYW5nbGU="
-        projectSecretSalt = "VHJpcHBsZQ=="
-    }
-
-   # AD/LDAP authentication
-    ldap {
-        url = "ldap://ad.lab.nwa.evtcorp.com:3269"
-        searchBase = "DC=lab,DC=nwa,DC=evtcorp,DC=com"
-        principalSearchFilter = "(&(sAMAccountName={0})(objectCategory=person))"
-        userSearchFilter = "(&(|(sAMAccountName={0}*)(displayName={0}*))(objectCategory=person))"
-        usernameProperty = "sAMAccountName"
-        systemUsername = "svc-concord@lab.nwa.evtcorp.com"
-        systemPassword = "C3yDK9EQs6jtgk"
-    }
-}
